@@ -102,6 +102,9 @@ nnoremap <C-c> <C-a>
 nnoremap <C-J> m`o<Esc>``
 nnoremap <C-K> m`O<Esc>``
 
+nnoremap <F5> "=strftime('%F ')<CR>P
+inoremap <F5> <C-R>=strftime('%F ')<CR>
+
 augroup filetype_vim
 	autocmd!
 	autocmd FileType vim setlocal foldmethod=marker
