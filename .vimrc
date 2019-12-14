@@ -26,6 +26,17 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'tpope/vim-surround'
 Plugin 'scrooloose/nerdcommenter'
 Plugin 'drmingdrmer/xptemplate'
+Plugin 'othree/xml.vim'
+
+Plugin 'chrisbra/Colorizer'
+
+Plugin 'tikhomirov/vim-glsl'
+
+Plugin 'rust-lang/rust.vim'
+
+Plugin 'maksimr/vim-jsbeautify'
+
+Plugin 'tyru/current-func-info.vim'
 
 call vundle#end()
 " }}}
@@ -41,6 +52,7 @@ syntax on
 
 set background=dark
 set t_Co=256
+set termguicolors
 colorscheme gruvbox
 
 set number
@@ -49,6 +61,7 @@ set incsearch
 set ls=2
 set backspace=indent,eol,start
 set ruler
+set cursorline
 
 " îòêëþ÷àåì áýêàïû è ñâîï-ôàéëû
 set nobackup
@@ -102,8 +115,24 @@ nnoremap <C-c> <C-a>
 nnoremap <C-J> m`o<Esc>``
 nnoremap <C-K> m`O<Esc>``
 
-nnoremap <F5> "=strftime('%F ')<CR>P
-inoremap <F5> <C-R>=strftime('%F ')<CR>
+nnoremap <F6> :exe "!tmux send -t 1 'python3 -m pytest' Enter"<CR><CR>
+
+nnoremap <leader>cpp :set syntax=cpp<CR>
+
+fu! DoCurrentPythonTest()
+    let currentFile = @%
+    let currentTest = cfi#format("%s", "")
+    let s = "python3 -m pytest " . currentFile . "::" . currentTest
+    execute "!tmux send -t 1 '" . s . "' Enter"
+endfunction
+
+nnoremap <F7> :call DoCurrentPythonTest()<CR><CR>
+
+nmap <leader>q :nohlsearch<CR>
+nmap <leader>xb :%!xmllint --format %<CR>
+
+set pastetoggle=<F3>
+set relativenumber
 
 augroup filetype_vim
 	autocmd!
@@ -111,6 +140,13 @@ augroup filetype_vim
 augroup END
 
 autocmd FileType lisp,scheme,art setlocal equalprg=scmindent.rkt
+autocmd BufNewFile *.cpp r ~/.vim/template.cpp
+autocmd! BufNewFile,BufRead *.vert,*.frag,*.glsl set ft=glsl
+autocmd! BufNewFile,BufRead *.earth set ft=xml
+autocmd! BufNewFile,BufRead *.sld set ft=xml
+
+au BufNewFile,BufRead *.map setf map
+au! FileType python setl nosmartindent
 
 if &term =~ '256color'
     set t_ut=
